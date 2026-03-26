@@ -9,213 +9,565 @@
     <meta name="robots" content="index, follow">
     <meta name="google-site-verification" content="nXr_EiiSq3Qy4lOMCYXXyrlfRlTnU-jRezm-yS-PIBM" />
     <link rel="canonical" href="https://peaklinesoftware.github.io/lightshot-alternative/">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #08080c;
+            --surface: #111117;
+            --surface-2: #19191f;
+            --surface-3: #222230;
+            --border: rgba(255,255,255,0.06);
+            --border-strong: rgba(255,255,255,0.12);
+            --text: #ededef;
+            --text-2: #8b8b9e;
+            --text-3: #55556a;
+            --accent: #e5484d;
+            --accent-2: #f76b15;
+            --accent-soft: rgba(229,72,77,0.08);
+            --accent-border: rgba(229,72,77,0.2);
+            --good: #30a46c;
+            --good-soft: rgba(48,164,108,0.1);
+            --bad: #e5484d;
+            --bad-soft: rgba(229,72,77,0.1);
+            --warn: #e5a819;
+            --warn-soft: rgba(229,168,25,0.1);
+            --font-display: 'Young Serif', Georgia, serif;
+            --font-body: 'Outfit', system-ui, sans-serif;
+            --max-w: 720px;
+            --section-gap: 80px;
+            --radius: 12px;
+        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--text-2);
             line-height: 1.7;
-            color: #1a1a2e;
-            background: #fafafa;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
         }
-        .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
-        header {
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            color: white;
-            padding: 48px 0;
+        /* Accent top bar */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            z-index: 10000;
         }
-        header h1 { font-size: 2rem; margin-bottom: 12px; }
-        header p { font-size: 1.1rem; opacity: 0.85; }
-        main { padding: 48px 0; }
-        h2 { font-size: 1.5rem; margin: 36px 0 16px; color: #0f0c29; }
-        h3 { font-size: 1.15rem; margin: 24px 0 8px; }
-        p { margin-bottom: 16px; }
-        .warning-box {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 16px 20px;
-            margin: 24px 0;
-            border-radius: 0 8px 8px 0;
+        /* Grain overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0.018;
+            pointer-events: none;
+            z-index: 9999;
         }
-        .warning-box strong { color: #856404; }
-        .comparison-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 24px 0;
+        .wrap { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
+
+        /* Hero */
+        .hero {
+            position: relative;
+            padding: 72px 0 56px;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -40%; left: 50%; transform: translateX(-50%);
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(229,72,77,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-3);
+            margin-bottom: 24px;
+        }
+        .hero-label .dot {
+            width: 6px; height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(229,72,77,0.4); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(229,72,77,0); }
+        }
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 2.75rem);
+            color: var(--text);
+            line-height: 1.2;
+            margin-bottom: 16px;
+            font-weight: 400;
+        }
+        .hero .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-2);
+            max-width: 540px;
+            margin-bottom: 20px;
+        }
+        .hero .byline {
+            font-size: 0.82rem;
+            color: var(--text-3);
+        }
+        .hero .byline span { color: var(--text-2); }
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, var(--border-strong), transparent);
+            margin: 48px 0;
+        }
+
+        /* Alert */
+        .alert {
+            background: var(--surface);
+            border: 1px solid var(--accent-border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: var(--section-gap);
+            position: relative;
+            overflow: hidden;
+        }
+        .alert::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, var(--accent), var(--accent-2));
+        }
+        .alert-header {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .alert ul { list-style: none; }
+        .alert li {
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+            color: var(--text-2);
             font-size: 0.95rem;
         }
-        .comparison-table th, .comparison-table td {
-            padding: 12px 16px;
+        .alert li::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 14px;
+            width: 6px; height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+
+        /* Sections */
+        section { margin-bottom: var(--section-gap); }
+        section h2 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--text);
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+        section p { margin-bottom: 14px; font-size: 0.95rem; }
+        .source {
+            font-size: 0.82rem;
+            color: var(--text-3);
+            font-style: italic;
+            padding-top: 4px;
+            border-top: 1px solid var(--border);
+            margin-top: 16px;
+        }
+
+        /* Comparison table */
+        .table-section h2 { margin-bottom: 24px; }
+        .table-wrap {
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        thead th {
+            background: var(--surface);
+            padding: 14px 18px;
             text-align: left;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        .comparison-table th {
-            background: #f5f5f5;
-            font-weight: 600;
-        }
-        .comparison-table .good { color: #2e7d32; font-weight: 600; }
-        .comparison-table .bad { color: #c62828; font-weight: 600; }
-        .comparison-table .neutral { color: #666; }
-        .cta-box {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 32px;
-            border-radius: 12px;
-            text-align: center;
-            margin: 36px 0;
-        }
-        .cta-box h3 { color: white; margin-top: 0; }
-        .cta-box a {
-            display: inline-block;
-            background: white;
-            color: #764ba2;
-            padding: 12px 32px;
-            border-radius: 8px;
-            text-decoration: none;
+            font-size: 0.72rem;
             font-weight: 700;
-            margin-top: 12px;
-            transition: transform 0.2s;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-3);
+            border-bottom: 1px solid var(--border-strong);
         }
-        .cta-box a:hover { transform: translateY(-2px); }
-        .source { font-size: 0.85rem; color: #666; font-style: italic; }
-        footer {
-            border-top: 1px solid #e0e0e0;
-            padding: 24px 0;
+        thead th:first-child { color: var(--text-2); }
+        tbody td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:hover td { background: rgba(255,255,255,0.015); }
+        td:first-child { color: var(--text); font-weight: 500; }
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+        .badge.good { background: var(--good-soft); color: var(--good); }
+        .badge.bad { background: var(--bad-soft); color: var(--bad); }
+        .badge.neutral { background: var(--warn-soft); color: var(--warn); }
+        .badge.muted { background: rgba(255,255,255,0.04); color: var(--text-2); }
+
+        /* CTA */
+        .cta {
+            background: var(--surface);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius);
+            padding: 40px 32px;
             text-align: center;
-            font-size: 0.85rem;
-            color: #999;
+            position: relative;
+            overflow: hidden;
         }
-        footer a { color: #764ba2; text-decoration: none; }
-        ul { margin: 0 0 16px 24px; }
-        li { margin-bottom: 8px; }
-        @media (max-width: 600px) {
-            header h1 { font-size: 1.5rem; }
-            .comparison-table { font-size: 0.85rem; }
-            .comparison-table th, .comparison-table td { padding: 8px; }
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--good), transparent);
+        }
+        .cta h3 {
+            font-family: var(--font-display);
+            font-size: 1.35rem;
+            color: var(--text);
+            font-weight: 400;
+            margin-bottom: 10px;
+        }
+        .cta p {
+            font-size: 0.92rem;
+            color: var(--text-2);
+            max-width: 440px;
+            margin: 0 auto 20px;
+        }
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            background: var(--good);
+            color: white;
+            border-radius: 8px;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(48,164,108,0.25);
+        }
+        .cta-btn svg { width: 16px; height: 16px; }
+        .cta-note {
+            display: block;
+            margin-top: 12px;
+            font-size: 0.78rem;
+            color: var(--text-3);
+        }
+
+        /* Alternatives list */
+        .alt-list { list-style: none; }
+        .alt-list li {
+            padding: 18px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.95rem;
+        }
+        .alt-list li:last-child { border-bottom: none; }
+        .alt-list strong { color: var(--text); }
+
+        /* Checklist */
+        .check-list { list-style: none; }
+        .check-list li {
+            padding: 10px 0 10px 28px;
+            position: relative;
+            font-size: 0.95rem;
+        }
+        .check-list li::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 16px;
+            width: 14px; height: 14px;
+            border: 2px solid var(--good);
+            border-radius: 3px;
+        }
+        .check-list li::after {
+            content: '';
+            position: absolute;
+            left: 3px; top: 19px;
+            width: 8px; height: 4px;
+            border-left: 2px solid var(--good);
+            border-bottom: 2px solid var(--good);
+            transform: rotate(-45deg);
+        }
+
+        /* FAQ */
+        .faq { margin-bottom: var(--section-gap); }
+        .faq h2 { margin-bottom: 24px; }
+        .faq-item {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 8px;
+            overflow: hidden;
+            background: var(--surface);
+            transition: border-color 0.2s;
+        }
+        .faq-item:hover { border-color: var(--border-strong); }
+        .faq-item summary {
+            cursor: pointer;
+            padding: 18px 24px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: var(--text);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            list-style: none;
+        }
+        .faq-item summary::-webkit-details-marker { display: none; }
+        .faq-item summary::after {
+            content: '+';
+            font-size: 1.3rem;
+            color: var(--text-3);
+            font-weight: 300;
+            transition: transform 0.3s;
+            flex-shrink: 0;
+            margin-left: 16px;
+        }
+        .faq-item[open] summary::after { transform: rotate(45deg); }
+        .faq-answer {
+            padding: 0 24px 18px;
+            font-size: 0.9rem;
+            color: var(--text-2);
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 32px 0;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-3);
+        }
+        footer a { color: var(--text-2); text-decoration: none; }
+        footer a:hover { color: var(--text); }
+        footer p + p { margin-top: 6px; }
+
+        /* Scroll reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .hero { padding: 48px 0 36px; }
+            .alert { padding: 18px 20px; }
+            .alert li { font-size: 0.88rem; }
+            thead th, tbody td { padding: 10px 12px; font-size: 0.82rem; }
+            .badge { font-size: 0.72rem; padding: 2px 8px; }
+            .cta { padding: 28px 20px; }
+            :root { --section-gap: 56px; }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>Is Lightshot Safe? What You Need to Know in 2026</h1>
-            <p>Lightshot has been flagged for serious privacy vulnerabilities. Here's what's happening and what alternatives exist.</p>
+    <header class="hero">
+        <div class="wrap">
+            <div class="hero-label"><span class="dot"></span> Peakline Software &middot; Security Analysis</div>
+            <h1>Is Lightshot Safe?<br>What You Need to Know in 2026</h1>
+            <p class="subtitle">Lightshot has been flagged for serious privacy vulnerabilities. Here's what's happening and what alternatives exist.</p>
+            <p class="byline">Published <span>March 2026</span> &middot; Independent analysis</p>
         </div>
     </header>
 
     <main>
-        <div class="container">
-            <div class="warning-box">
-                <strong>Key Facts:</strong> Lightshot screenshots uploaded to prntscr.com are publicly accessible via sequential URLs. The extension has not been updated since July 2024. Multiple universities have blocked it for cybersecurity reasons.
+        <div class="wrap">
+            <div class="divider"></div>
+
+            <div class="alert reveal">
+                <div class="alert-header">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1L1 14h14L8 1z" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M8 6v4M8 12h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    Key Findings
+                </div>
+                <ul>
+                    <li>Lightshot screenshots uploaded to prntscr.com are publicly accessible via sequential URLs</li>
+                    <li>The extension has not been updated since July 2024</li>
+                    <li>Multiple universities have blocked it for cybersecurity reasons</li>
+                </ul>
             </div>
 
-            <h2>The Privacy Problem</h2>
-            <p>Lightshot's optional upload feature sends screenshots to prntscr.com, where they're assigned sequential, publicly-accessible URLs. Anyone who can guess or enumerate these URLs can view screenshots that may contain sensitive information.</p>
-            <p>This vulnerability was reported by WIRED and has been independently verified by security researchers. Screenshots containing personal data, financial information, and private communications have been found accessible through simple URL enumeration.</p>
-            <p class="source">Source: WIRED, "The Lightshot screenshot app is a privacy nightmare"</p>
+            <section class="reveal">
+                <h2>The Privacy Problem</h2>
+                <p>Lightshot's optional upload feature sends screenshots to prntscr.com, where they're assigned sequential, publicly-accessible URLs. Anyone who can guess or enumerate these URLs can view screenshots that may contain sensitive information.</p>
+                <p>This vulnerability was reported by WIRED and has been independently verified by security researchers. Screenshots containing personal data, financial information, and private communications have been found accessible through simple URL enumeration.</p>
+                <p class="source">Source: WIRED, "The Lightshot screenshot app is a privacy nightmare"</p>
+            </section>
 
-            <h2>The Broken Screenshots Problem</h2>
-            <p>Since the v7.0.1 update in July 2024, many Windows 11 and macOS users report that Lightshot saves blank or white images instead of actual screenshots. The developer has not released a fix in over 20 months.</p>
-            <p>This issue appears consistently in recent user reviews and support forums, with no official response from the development team.</p>
+            <section class="reveal">
+                <h2>The Broken Screenshots Problem</h2>
+                <p>Since the v7.0.1 update in July 2024, many Windows 11 and macOS users report that Lightshot saves blank or white images instead of actual screenshots. The developer has not released a fix in over 20 months.</p>
+                <p>This issue appears consistently in recent user reviews and support forums, with no official response from the development team.</p>
+            </section>
 
-            <h2>Permission Concerns</h2>
-            <p>Lightshot requests broad permissions including access to all websites you visit. Many users are unaware of what these permissions allow.</p>
+            <section class="reveal">
+                <h2>Permission Concerns</h2>
+                <p>Lightshot requests broad permissions including access to all websites you visit. Many users are unaware of what these permissions allow.</p>
+            </section>
 
-            <h2>Screenshot Extension Comparison</h2>
-            <table class="comparison-table">
-                <thead>
-                    <tr>
-                        <th>Feature</th>
-                        <th>ClearShot</th>
-                        <th>Lightshot</th>
-                        <th>GoFullPage</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Area selection</td>
-                        <td class="good">Yes</td>
-                        <td class="bad">Broken (blank)</td>
-                        <td class="neutral">Full page only</td>
-                    </tr>
-                    <tr>
-                        <td>Annotation tools</td>
-                        <td class="good">Arrows, text, shapes, freehand</td>
-                        <td class="neutral">Arrows, text, shapes</td>
-                        <td class="neutral">Premium only</td>
-                    </tr>
-                    <tr>
-                        <td>Data stays local</td>
-                        <td class="good">Always local</td>
-                        <td class="bad">Uploads to public URL</td>
-                        <td class="good">Local</td>
-                    </tr>
-                    <tr>
-                        <td>Account required</td>
-                        <td class="good">No</td>
-                        <td class="neutral">Optional</td>
-                        <td class="neutral">For premium</td>
-                    </tr>
-                    <tr>
-                        <td>Permissions</td>
-                        <td class="good">2 (activeTab + scripting)</td>
-                        <td class="bad">All websites</td>
-                        <td class="good">activeTab</td>
-                    </tr>
-                    <tr>
-                        <td>Last updated</td>
-                        <td class="good">March 2026</td>
-                        <td class="bad">July 2024</td>
-                        <td class="good">Active</td>
-                    </tr>
-                    <tr>
-                        <td>Extension size</td>
-                        <td class="good">54 KB</td>
-                        <td class="neutral">~500 KB</td>
-                        <td class="neutral">~200 KB</td>
-                    </tr>
-                </tbody>
-            </table>
+            <section class="table-section reveal">
+                <h2>Screenshot Extension Comparison</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>ClearShot</th>
+                                <th>Lightshot</th>
+                                <th>GoFullPage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Area selection</td>
+                                <td><span class="badge good">Yes</span></td>
+                                <td><span class="badge bad">Broken (blank)</span></td>
+                                <td><span class="badge muted">Full page only</span></td>
+                            </tr>
+                            <tr>
+                                <td>Annotation tools</td>
+                                <td><span class="badge good">Arrows, text, shapes, freehand</span></td>
+                                <td><span class="badge muted">Arrows, text, shapes</span></td>
+                                <td><span class="badge neutral">Premium only</span></td>
+                            </tr>
+                            <tr>
+                                <td>Data stays local</td>
+                                <td><span class="badge good">Always local</span></td>
+                                <td><span class="badge bad">Uploads to public URL</span></td>
+                                <td><span class="badge good">Local</span></td>
+                            </tr>
+                            <tr>
+                                <td>Account required</td>
+                                <td><span class="badge good">No</span></td>
+                                <td><span class="badge muted">Optional</span></td>
+                                <td><span class="badge neutral">For premium</span></td>
+                            </tr>
+                            <tr>
+                                <td>Permissions</td>
+                                <td><span class="badge good">2 (activeTab + scripting)</span></td>
+                                <td><span class="badge bad">All websites</span></td>
+                                <td><span class="badge good">activeTab</span></td>
+                            </tr>
+                            <tr>
+                                <td>Last updated</td>
+                                <td><span class="badge good">March 2026</span></td>
+                                <td><span class="badge bad">July 2024</span></td>
+                                <td><span class="badge good">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>Extension size</td>
+                                <td><span class="badge good">54 KB</span></td>
+                                <td><span class="badge muted">~500 KB</span></td>
+                                <td><span class="badge muted">~200 KB</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
 
-            <div class="cta-box">
+            <div class="cta reveal">
                 <h3>Try ClearShot: Privacy-First Screenshots</h3>
                 <p>Area select, annotate, save locally. No upload, no account, no tracking. Only 2 permissions.</p>
-                <a href="https://chromewebstore.google.com/detail/clearshot-screenshot-anno/eoiadddokiodcajcamagfbnmnbdjdibn" target="_blank" rel="noopener">Install from Chrome Web Store</a>
+                <a href="https://chromewebstore.google.com/detail/clearshot-screenshot-anno/eoiadddokiodcajcamagfbnmnbdjdibn" class="cta-btn" target="_blank" rel="noopener">
+                    <svg viewBox="0 0 16 16" fill="none"><path d="M8 1v8m0 0l3-3m-3 3L5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 11v2a2 2 0 002 2h10a2 2 0 002-2v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    Install from Chrome Web Store
+                </a>
+                <span class="cta-note">Free &middot; No account required &middot; 54 KB</span>
             </div>
 
-            <h2>Other Alternatives Worth Considering</h2>
-            <ul>
-                <li><strong>GoFullPage</strong> &mdash; Best for full-page screenshots. Different use case (captures entire scrollable page, not a selected area). Free with premium annotation tools.</li>
-                <li><strong>ShareX</strong> &mdash; Powerful desktop screenshot tool (Windows only). Not a Chrome extension, but excellent for power users who need desktop-level capture.</li>
-                <li><strong>Windows Snipping Tool</strong> &mdash; Built into Windows. Good for quick captures but lacks in-browser annotation.</li>
-                <li><strong>FireShot</strong> &mdash; Full-page focused Chrome extension. Mature tool with good reviews.</li>
-            </ul>
+            <section class="reveal" style="margin-top:var(--section-gap)">
+                <h2>Other Alternatives Worth Considering</h2>
+                <ul class="alt-list">
+                    <li><strong>GoFullPage</strong> &mdash; Best for full-page screenshots. Different use case (captures entire scrollable page, not a selected area). Free with premium annotation tools.</li>
+                    <li><strong>ShareX</strong> &mdash; Powerful desktop screenshot tool (Windows only). Not a Chrome extension, but excellent for power users who need desktop-level capture.</li>
+                    <li><strong>Windows Snipping Tool</strong> &mdash; Built into Windows. Good for quick captures but lacks in-browser annotation.</li>
+                    <li><strong>FireShot</strong> &mdash; Full-page focused Chrome extension. Mature tool with good reviews.</li>
+                </ul>
+            </section>
 
-            <h2>What to Look for in a Screenshot Extension</h2>
-            <ul>
-                <li><strong>Minimal permissions</strong> &mdash; Extensions that request "access to all websites" can read your browsing data. Look for <code>activeTab</code> (per-click access only).</li>
-                <li><strong>Local storage</strong> &mdash; Screenshots should save to your device, not upload to external servers by default.</li>
-                <li><strong>Active maintenance</strong> &mdash; Check the "last updated" date on the Chrome Web Store. Abandoned extensions accumulate security vulnerabilities.</li>
-                <li><strong>No account required</strong> &mdash; A screenshot tool shouldn't need your email address.</li>
-            </ul>
+            <section class="reveal">
+                <h2>What to Look for in a Screenshot Extension</h2>
+                <ul class="check-list">
+                    <li><strong>Minimal permissions</strong> &mdash; Extensions that request "access to all websites" can read your browsing data. Look for <code>activeTab</code> (per-click access only).</li>
+                    <li><strong>Local storage</strong> &mdash; Screenshots should save to your device, not upload to external servers by default.</li>
+                    <li><strong>Active maintenance</strong> &mdash; Check the "last updated" date on the Chrome Web Store. Abandoned extensions accumulate security vulnerabilities.</li>
+                    <li><strong>No account required</strong> &mdash; A screenshot tool shouldn't need your email address.</li>
+                </ul>
+            </section>
 
-            <h2>Frequently Asked Questions</h2>
-
-            <h3>Why are my Lightshot screenshots blank?</h3>
-            <p>Since the July 2024 update (v7.0.1), Lightshot's capture mechanism has been broken on Windows 11 and some macOS versions. Screenshots save as blank white images. The developer has not released a fix.</p>
-
-            <h3>Can anyone see my Lightshot screenshots?</h3>
-            <p>If you've used Lightshot's upload feature (sharing via prntscr.com), your screenshots may be publicly accessible. The URLs follow a predictable pattern that can be enumerated.</p>
-
-            <h3>What's the safest screenshot extension for Chrome?</h3>
-            <p>Look for extensions that: (1) use only <code>activeTab</code> permission, (2) save screenshots locally by default, (3) don't require an account, and (4) are actively maintained.</p>
+            <section class="faq reveal">
+                <h2>Frequently Asked Questions</h2>
+                <details class="faq-item">
+                    <summary>Why are my Lightshot screenshots blank?</summary>
+                    <div class="faq-answer">Since the July 2024 update (v7.0.1), Lightshot's capture mechanism has been broken on Windows 11 and some macOS versions. Screenshots save as blank white images. The developer has not released a fix.</div>
+                </details>
+                <details class="faq-item">
+                    <summary>Can anyone see my Lightshot screenshots?</summary>
+                    <div class="faq-answer">If you've used Lightshot's upload feature (sharing via prntscr.com), your screenshots may be publicly accessible. The URLs follow a predictable pattern that can be enumerated.</div>
+                </details>
+                <details class="faq-item">
+                    <summary>What's the safest screenshot extension for Chrome?</summary>
+                    <div class="faq-answer">Look for extensions that: (1) use only <code>activeTab</code> permission, (2) save screenshots locally by default, (3) don't require an account, and (4) are actively maintained.</div>
+                </details>
+            </section>
         </div>
     </main>
 
     <footer>
-        <div class="container">
+        <div class="wrap">
             <p>Published by <a href="https://peaklinesoftware.github.io">Peakline Software</a> &middot; Last updated March 2026</p>
             <p>This page is not affiliated with Lightshot or Skillbrains. Information is based on publicly available sources.</p>
         </div>
     </footer>
+
+    <script>
+    document.querySelectorAll('.reveal').forEach(el => {
+        new IntersectionObserver(([e]) => {
+            if (e.isIntersecting) { el.classList.add('visible'); e.target.style.transitionDelay = '0s'; }
+        }, { threshold: 0.1 }).observe(el);
+    });
+    </script>
 </body>
 </html>
